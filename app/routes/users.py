@@ -201,6 +201,11 @@ def order_confirmed(request: Request):
     res = checkout_cart(user_data['id'])
     if res['message'] == 'False':
         return RedirectResponse(url='/404')
+    elif res['message'] == 'Error':
+        message = res['response']
+        product_id = res.get('product_id',None)
+        return templates.TemplateResponse("out_of_stock.html",{"request":request,"user":user,"categories":categories,"message":message,"product_id":product_id})
+    
     else:
         order_data = get_order(res['order_id'])
         temp = {}
@@ -219,6 +224,7 @@ def order_confirmed(request: Request):
         order_data = temp
         return templates.TemplateResponse("order-confirmed.html",{"request":request,"user":user,"categories":categories,'order_data':order_data})
 
+    
 @router.get('/stock_check', response_class=JSONResponse)
 def stock_check(request: Request, product_id: str = Query(...), quantity: int = Query(...)):
     product = get_product(product_id)
