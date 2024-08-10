@@ -7,7 +7,7 @@ from app.crud.user import get_user_mail,add_user, update_last_login,update_user
 from app.config.session import login_user, get_current_user,logout_user,get_temp_user
 from app.crud.category import get_all_category,get_category,search_category,get_random_4_category
 from app.crud.product import get_product_cat, get_random_product, search_product,get_product,get_product_by_cat_id_sort,get_recommended_products
-from app.crud.cart import add_cart_product, get_cart_user, remove_cart_product, update_cart_product, checkout_cart
+from app.crud.cart import add_cart_product, get_cart_user, remove_cart_product, update_cart_product, checkout_cart,cart_price_update
 from app.crud.order import get_order_user,get_order
 from datetime import datetime
 from app.config.cypher import verify_password,hash_password
@@ -159,6 +159,9 @@ def cart(request: Request):
         for prod_id, qty in cart_data['product_data'].items():
             temp_dict = {}
             product = get_product(prod_id)
+            if product == None:
+                cart_price_update(cart_data['id'])
+                continue
             temp_dict['id'] = prod_id
             temp_dict['image'] = product['images'][0]
             temp_dict['name'] = product['name']

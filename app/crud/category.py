@@ -48,6 +48,7 @@ def del_category(category_id):
     query = {'_id':ObjectId(category_id)}
     setdata = {'$set':{'status':'inactive'}}
     category_db.update_one(query,setdata)
+    cart_db.update_many({'cat_id':category_id},{'$set':{'status':'inactive'}})
     product_db.update_many({'cat_id':category_id},{'$set':{'status':'inactive'}})
     order_db.update_many({'cat_id':category_id},{'$set':{'status':'inactive'}})
     

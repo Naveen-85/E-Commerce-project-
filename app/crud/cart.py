@@ -79,3 +79,16 @@ def checkout_cart(user_id):
         cart_db.delete_one({'user_id':user_id})
         return {'order_id':str(ack.inserted_id),'message':'True'}
     return {'message':'False'}
+
+def cart_price_update(cart_id):
+    cart = cart_serial(cart_db.find_one({'_id':ObjectId(cart_id)}))
+    total_price = 0
+    for product_id, qty in cart['product_data'].items():
+        product = get_product(product_id)
+        if product == None:
+            continue
+        total_price += int(product['price']) * qty
+    ack = cart_db.update_one({'_id':ObjectId(cart_id)}, {'$set': {'total_price':str(total_price)}})
+    if ack.acknowledged:
+        return True
+    return False
