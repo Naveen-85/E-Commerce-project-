@@ -1,5 +1,5 @@
 from app.model.models import Seller
-from app.config.database import seller_db,product_db,order_db
+from app.config.database import seller_db,product_db,order_db,cart_db
 from app.schemas.schemas import list_seller,seller_serial
 from bson import ObjectId
 
@@ -50,6 +50,7 @@ def del_seller(seller_id):
     seller_db.update_one(query,setdata)
     product_db.update_many({'seller_id':seller_id},{'$set':{'status':'inactive'}})
     order_db.update_many({'seller_id':seller_id},{'$set':{'status':'inactive'}})
+    cart_db.update_many({'seller_id':seller_id},{'$set':{'status':'inactive'}})
     
 
 def search_seller(search_query):

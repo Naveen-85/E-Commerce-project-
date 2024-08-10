@@ -1,5 +1,5 @@
 from app.model.models import Product
-from app.config.database import product_db, category_db,order_db
+from app.config.database import product_db, category_db,order_db,cart_db
 from app.schemas.schemas import list_product, product_serial
 from bson import ObjectId
 
@@ -81,6 +81,7 @@ def del_product(product_id):
     ack = product_db.update_one(query,setdata)
     query = {f'product_data.{product_id}': {'$exists': True}}
     order_db.update_many(query,{'$set':{'status':'inactive'}})
+    cart_db.update_many(query,{'$set':{'status':'inactive'}})
     
     if ack.acknowledged:
         return True

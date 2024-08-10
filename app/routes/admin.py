@@ -4,7 +4,7 @@ from app.model.models import Admin, Category, Product, User, Order, Seller
 from fastapi.templating import Jinja2Templates
 from bson import ObjectId
 from app.crud.admin import get_admin_username, update_admin
-from app.crud.category import add_new_category, get_all_category, get_category, del_category, restore_category,search_category,update_category
+from app.crud.category import add_new_category, get_all_category, get_category, del_category, restore_category,search_category,update_category, get_category_name
 from app.crud.product import get_all_product,del_product,get_product,search_product
 from app.crud.user import get_all_user, get_user, del_user,search_users_by_name
 from app.crud.seller import get_all_seller, get_seller_mail, add_seller, del_seller,get_seller,search_seller
@@ -51,12 +51,15 @@ def category_page(request:Request):
 @router.post('/add_category',response_class=HTMLResponse)
 def add_category_new(request: Request, name:str = Form(...), description:str = Form(...), image:str = Form(...)):
     admin=get_current_admin(request)
+    exist_cat = get_category_name(name)
+    if exist_cat != None:
+        return templates.TemplateResponse("add_category.html", {"request": request,"admin":admin,"message":"Category Already exist"})
     category = Category(name=name,description=description,image=image,last_change=str(datetime.datetime.now()))
     ack = add_new_category(category)
     if ack:
-        return RedirectResponse(url='/admin_dashboard',status_code=302)
+        return RedirectResponse(url='/manage_category',status_code=302)
     else:
-        return templates.TemplateResponse("add_category.html", {"request": request,"message":"Something went wrong"})
+        return templates.TemplateResponse("add_category.html", {"request": request,"admin":admin,"message":"Something went wrong"})
     
 
 @router.get('/manage_user',response_class=HTMLResponse)
