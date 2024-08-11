@@ -73,6 +73,8 @@ def landing_page(request: Request):
 def cat_page(request: Request, cat_id: str):
     user = get_current_user(request)
     category = get_category(cat_id)
+    if category == None:
+        return RedirectResponse(url="/404")
     categories = get_all_category()
     products = get_product_cat(cat_id)
     return templates.TemplateResponse("users_category.html",{'request':request,"user":user,"category":category,"categories":categories,"products":products})
@@ -108,6 +110,8 @@ def product_page(request: Request, prod_id: str):
     user = get_current_user(request)
     categories = get_all_category()
     product = get_product(prod_id)
+    if product == None:
+        return RedirectResponse(url="/404")
     recommended_products = get_recommended_products(product['cat_id'],prod_id)
     return templates.TemplateResponse("product_page.html",{"request":request,"user":user,"categories":categories,"product":product,"recommended_products":recommended_products})
 
@@ -116,9 +120,13 @@ def cart_page(request: Request, product_id: str= Query(...), quantity: int = Que
     user = get_current_user(request)
     categories = get_all_category()
     product_data = get_product(product_id)
+    if product_data == None:
+        return RedirectResponse(url="/404")
     if quantity > product_data['stock']:
         return JSONResponse(status_code=400, content={"success": False, "message": "Not enough stock available"})
     user_data = get_user_mail(user)
+    if user_data == None:
+        return RedirectResponse(url="/404")
     ack = add_cart_product(user_data['id'],product_id,quantity)
     if ack:
          return JSONResponse(status_code=200, content={"success": True, "message": "Product added to cart successfully"})
@@ -130,9 +138,14 @@ def buy_now(request: Request, product_id: str= Query(...), quantity: int = Query
     user = get_current_user(request)
     categories = get_all_category()
     product_data = get_product(product_id)
+    if product_data == None:
+        return RedirectResponse(url="/404")
     if quantity > product_data['stock']:
         return JSONResponse(status_code=400, content={"success": False, "message": "Not enough stock available"})
     user_data = get_user_mail(user)
+    if user_data == None:
+        logout_user(request)
+        return RedirectResponse(url="/404")
     ack = add_cart_product(user_data['id'],product_id,quantity)
     if ack:
         return JSONResponse(status_code=200, content={"redirect": True, "message": "Redirecting..", "url": "/user_cart"})
@@ -143,15 +156,19 @@ def buy_now(request: Request, product_id: str= Query(...), quantity: int = Query
 # 404_page_not_found
 @router.get("/404", response_class=HTMLResponse)
 async def catch_all(request: Request):
-    return templates.TemplateResponse("error_page.html", {"request": request})
+    return templates.TemplateResponse("error_page.html", {"request": request}, status_code=404)
 
 @router.get('/user_cart',response_class=HTMLResponse)
 def cart(request: Request):
     user = get_current_user(request)
     user_data = get_user_mail(user)
+    if user == None:
+        logout_user(request)
+        return RedirectResponse(url="/404")
     categories = get_all_category()
     cart_data = get_cart_user(user_data['id'])
     if user == None:
+        logout_user(request)
         return RedirectResponse(url="/404")
     products = []
     super_total = 0
@@ -178,6 +195,9 @@ def cart(request: Request):
 def remove_cart_item(request: Request, product_id: str = Query(...)):
     user = get_current_user(request)
     user_data = get_user_mail(user)
+    if user_data == None:
+        logout_user(request)
+        return RedirectResponse(url="/404")
     ack = remove_cart_product(user_data['id'],product_id)
     if ack:
         return RedirectResponse(url='/user_cart')
@@ -187,6 +207,9 @@ def remove_cart_item(request: Request, product_id: str = Query(...)):
 def qty_update(request: Request, product_id: str = Query(...), flag: bool = Query(...)):
     user = get_current_user(request)
     user_data = get_user_mail(user)
+    if user_data == None:
+        logout_user(request)
+        return RedirectResponse(url="/404")
     ack = update_cart_product(user_data['id'],product_id,flag)
     if ack:
         return JSONResponse(status_code=200, content={"success": True, "message": "Quantity updated successfully"})
@@ -198,6 +221,9 @@ def order_confirmed(request: Request):
     user = get_current_user(request)
     categories = get_all_category()
     user_data = get_user_mail(user)
+    if user_data == None:
+        logout_user(request)
+        return RedirectResponse(url="/404")
     res = checkout_cart(user_data['id'])
     if res['message'] == 'False':
         return RedirectResponse(url='/404')
@@ -208,6 +234,8 @@ def order_confirmed(request: Request):
     
     else:
         order_data = get_order(res['order_id'])
+        if order_data == None:
+            return RedirectResponse(url='/404')
         temp = {}
         temp['order_id'] = order_data['id']
         temp['order_date'] = order_data['order_date']
@@ -231,17 +259,23 @@ def stock_check(request: Request, product_id: str = Query(...), quantity: int = 
     if quantity > product['stock']:
         return JSONResponse(status_code=400, content={"success": False, "message": "Not enough stock available"})
     return JSONResponse(status_code=200, content={"success": True, "message": "Stock available"})
+
+
 @router.get('/sort_category/{cat_id}/{sort}')
 def cat_sort_page(request: Request, cat_id: str, sort: str):
     user = get_current_user(request)
     categories = get_all_category()
-    products = get_product_by_cat_id_sort(cat_id,int(sort))
     category = get_category(cat_id)
+    if category == None:
+        return RedirectResponse(url="/404")
+    elif sort not in ['1','-1']:
+        return RedirectResponse(url="/404")
+    products = get_product_by_cat_id_sort(cat_id,int(sort))
     return templates.TemplateResponse("users_category.html",{'request':request,"user":user,"category":category,"categories":categories,"products":products})
 
 @router.get('/500')
 def server_error(request: Request):
-    return templates.TemplateResponse("500.html",{"request":request})
+    return templates.TemplateResponse("500.html",{"request":request},status_code=500)
 
 @router.get('/user_profile', response_class=HTMLResponse)
 def user_profile(request: Request, response: Response):
@@ -249,6 +283,9 @@ def user_profile(request: Request, response: Response):
     if user is None:
         return RedirectResponse(url="/user_login")
     user_data = get_user_mail(user)
+    if user_data == None:
+        logout_user(request)
+        return RedirectResponse(url="/404")
     categories = get_all_category()
     orders = get_order_user(user_data['id'])
     order_list = []
@@ -270,31 +307,40 @@ def user_profile(request: Request, response: Response):
             temp['product_data'].append(product_data)
         order_list.append(temp)
     response.headers["Cache-Control"] = "no-cache, no-store"
-    return templates.TemplateResponse("user_profile.html",{"request":request,"user":user,"user_data":user_data,"categories":categories,"orders":order_list})
+    success = request.session.get('success',None)
+    return templates.TemplateResponse("user_profile.html",{"request":request,"user":user,"user_data":user_data,"categories":categories,"orders":order_list,"success":success})
 
 @router.get('/user_edit_profile', response_class=HTMLResponse)
 def user_edit_profile(request: Request):
     user = get_current_user(request)
     user_data = get_user_mail(user)
+    if user_data == None:
+        logout_user(request)
+        return RedirectResponse(url="/404")
     categories = get_all_category()
     return templates.TemplateResponse("edit_user.html",{"request":request,"user":user,"user_data":user_data,"categories":categories})
 
 @router.post('/user_profile_update', response_class=RedirectResponse)
-def user_edit_profile(request: Request, name:str = Form(...), address: str=Form(...)):
+def user_edit_profile(request: Request,response: Response, name:str = Form(...), address: str=Form(...)):
     user = get_current_user(request)
     user_data = get_user_mail(user)
+    if user_data == None:
+        logout_user(request)
+        return RedirectResponse(url="/404")
     categories = get_all_category()
     user = User(name=name,email=user_data['email'],address=address,password=user_data['password'],id=user_data['id'])
     ack = update_user(user,user_data['id'])
     if ack == False:
-        return templates.TemplateResponse("edit_user.html",{"request":request,"error":"Email already exist","user":user,"categories":categories,"user_data":user_data})
+        return templates.TemplateResponse("edit_user.html",{"request":request,"error":"Something went wrong","user":user,"categories":categories,"user_data":user_data})
     elif ack == True:
-        return templates.TemplateResponse("edit_user.html",{"request":request,"success":"Profile updated successfully","user":user,"categories":categories,"user_data":get_user_mail(user)})
+        request.session['success'] = "Profile updated successfully"
+        return RedirectResponse(url="/user_profile",status_code=303)
     else:
         return templates.TemplateResponse("500.html",{"request":request})
+    
+    
 @router.get('/user_forgot_password', response_class=HTMLResponse)
 def forgot_password(request: Request):
-    
     return templates.TemplateResponse("forgot_pass_main.html",{"request":request,'role':'user'})
 
 @router.get('/verify_email', response_class=HTMLResponse)
@@ -309,6 +355,9 @@ def verify_email(request: Request, email: str):
 def reset_password(request: Request, email: str= Form(...), password: str = Form(...)):
     temp_user = get_temp_user(request)
     user = get_user_mail(temp_user)
+    if user == None:
+        logout_user(request)
+        return RedirectResponse(url="/404")
     logout_user(request)
     if temp_user != email:
         return templates.TemplateResponse("forgot_pass_main.html",{"request":request,"error":"Invalid email","user":user})

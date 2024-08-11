@@ -112,19 +112,6 @@ def get_product_by_cat_id_sort(cat_id, sort_order):
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
-
-
-# def get_product_by_cat_id_sort(cat_id, sort):
-#     query = {'cat_id': cat_id, 'status': 'active'}
-#     try:
-#         products = list_product(product_db.find(query))
-#         out_of_stock_exists = any(product['stock'] == 0 for product in products)
-#         if out_of_stock_exists:
-#             sort = -sort
-#         sorted_products = list_product(product_db.find(query).sort('price', sort))
-#         return sorted_products
-#     except:
-#         return None
     
 def search_product_by_name_seller_id(seller_id,name):
     query = {'seller_id':seller_id,'name':{'$regex':name,"$options": "i"},'status':'active'}

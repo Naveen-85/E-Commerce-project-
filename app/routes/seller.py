@@ -38,6 +38,9 @@ def landing_page(request: Request):
     try:
         seller = get_current_seller(request)
         seller_info = get_seller_mail(seller)
+        if seller_info == None:
+            logout_seller(request)
+            return RedirectResponse(url='/seller_login')
         products = get_product_sell(seller_info['id'])
         return templates.TemplateResponse("seller_landing.html",{"request":request,"seller":seller,"seller_info":seller_info,"products":products})
     except:
@@ -70,6 +73,9 @@ async def addproductinfpr(
         encoded_images.append(encoded)
     seller = get_current_seller(request)
     seller_info = get_seller_mail(seller)
+    if seller_info == None:
+        logout_seller(request)
+        return RedirectResponse(url='/seller_login')
     existing_products = get_product_name(name)
     if existing_products != None and existing_products['seller_id'] == seller_info['id']:
         return templates.TemplateResponse("seller_product.html",{'request':request,"seller":seller,"categories":get_all_category(),'message':'exist'})
@@ -95,7 +101,12 @@ async def addproductinfpr(
 def product_info(request: Request, product_id:str):
         seller = get_current_seller(request)
         seller_info = get_seller_mail(seller)
+        if seller_info == None:
+            logout_seller(request)
+            return RedirectResponse(url='/seller_login')
         product = get_product(product_id)
+        if product == None:
+            return RedirectResponse(url='/404')
         category = get_all_category()
         return templates.TemplateResponse("seller_product_info.html",{'request':request,"seller":seller,"product":product,"categories":category})
     
@@ -151,6 +162,8 @@ def seller_update(request: Request):
 def seller_update(request: Request, name:str = Form(...), phone: str=Form(...)):
     seller=get_current_seller(request)
     seller_data=get_seller_mail(seller)
+    if phone.isdigit() != True or len(phone) != 10:
+        return templates.TemplateResponse("edit_seller_info.html",{"request":request,"error":"Invalid phone number","seller":seller,"seller_info":seller_data})
     seller=Seller(name=name,email=seller_data['email'],password=seller_data['password'], phone=phone)
     ack=update_seller(seller, seller_data['id'])
     if ack == False:
@@ -158,6 +171,9 @@ def seller_update(request: Request, name:str = Form(...), phone: str=Form(...)):
     elif ack == True:
         seller = get_current_seller(request)
         seller_info = get_seller_mail(seller)
+        if seller_info == None:
+            logout_seller(request)
+            return RedirectResponse(url='/seller_login')
         products = get_product_sell(seller_info['id'])
         return templates.TemplateResponse("seller_landing.html",{"request":request,"seller":seller,"seller_info":seller_info,"products":products,"success":"profile updated successfully"})   
     else:
@@ -167,6 +183,9 @@ def seller_update(request: Request, name:str = Form(...), phone: str=Form(...)):
 def search_product(request: Request, search:str = Query(...)):
     seller = get_current_seller(request)
     seller_info = get_seller_mail(seller)
+    if seller_info == None:
+        logout_seller(request)
+        return RedirectResponse(url='/seller_login')
     products = search_product_by_name_seller_id(seller_info['id'],search)
     return templates.TemplateResponse("seller_landing.html",{"request":request,"seller":seller,"seller_info":seller_info,"products":products})
 
