@@ -14,7 +14,7 @@
             location.reload(true);
         }
         </script>
-    {% if user %}
+    {% if user or message %}
     <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
         <div class="container-fluid">
             <a href="/" class="navbar-brand">E-Store</a>
@@ -70,24 +70,11 @@
             </div>
             
                 <div style="margin-top: 20px;">
-                {%if message == 'There is Insufficient Stock'%}
-                <form action="/user_product/{{product_id}}" method="get">
-                    <button class="btn btn-primary btn-lg shadow-sm" type="submit" style="float: right;">
-                        Take Me to the Product  
-                    </button>
-                </form>
                 <form action="/" method="get">
                     <button class="btn btn-primary btn-lg shadow-sm" type="submit" style="float: right;">
                         Continue Shopping 
                     </button>
                 </form>
-                {%else%}
-                <form action="/" method="get">
-                    <button class="btn btn-primary btn-lg shadow-sm" type="submit" style="float: right;">
-                        Continue Shopping 
-                    </button>
-                </form>
-                {%endif%}
             </div>
         </div>
         
@@ -96,7 +83,7 @@
     </div>    
     {% else %}
         <script>
-            window.location.href = '/user_login';
+            window.location.href = '/404';
         </script>
     {% endif %}
     
