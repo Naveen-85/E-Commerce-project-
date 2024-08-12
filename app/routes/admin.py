@@ -164,6 +164,8 @@ def seller_register(request: Request):
 @router.post('/add_seller',response_class=HTMLResponse)
 def seller_register(request: Request, name:str = Form(...), email: str=Form(...), password: str=Form(...), number: int=Form(...)): 
     admin = get_current_admin(request)
+    if len(number) != 10:
+        return templates.TemplateResponse("add_seller.html", {"request": request,"admin":admin,"message":"Invalid phone number"})
     item = get_seller_mail(email)
     if item != None:
         return templates.TemplateResponse("add_seller.html", {"request": request,"admin":admin,"message":"Seller Already exist"})

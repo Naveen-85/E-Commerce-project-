@@ -67,6 +67,9 @@ async def addproductinfpr(
     images: List[UploadFile] = File(...),
 ):
     encoded_images = []
+    seller = get_current_seller(request)
+    if len(images) > 4:
+        return templates.TemplateResponse("seller_product.html",{'request':request,"seller":seller,"categories":get_all_category(),'message':'max'})
     for image in images:
         contents = await image.read()
         encoded = base64.b64encode(contents).decode('utf-8')

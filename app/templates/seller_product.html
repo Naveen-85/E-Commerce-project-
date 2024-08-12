@@ -93,6 +93,8 @@
     <div class="alert alert-danger">Error adding product</div>
     {% elif message == 'exist' %}
     <div class="alert alert-danger">The Product Already exist</div>
+    {% elif message == 'max' %}
+    <div class="alert alert-danger">You have reached the maximum number of images for products</div>
     {% endif %}
     <h1 style="padding: 5px;">Add New Product</h1>
     <form action="/seller_add_product" method="post" enctype="multipart/form-data">
