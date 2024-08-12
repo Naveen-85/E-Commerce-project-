@@ -86,6 +86,8 @@ def order_logs(request: Request):
         user_data = get_user(item['user_id'])
         for product_id, quantity in item['product_data'].items():
             product = get_product(product_id)
+            if product is None:
+                continue
             seller = get_seller(product['seller_id'])
             if seller is None:
                 continue
