@@ -104,10 +104,10 @@ def get_product_by_cat_id_sort(cat_id, sort_order):
         
         # Convert price from string to float and sort manually
         products.sort(key=lambda x: (
-            x['stock'] == 0,             # First, sort by stock (True if stock is 0, so it goes last)
             float(x['price'])            # Then, sort by price
         ), reverse=(sort_order == -1))
         
+        products = [product for product in products if product['stock'] != 0 ] + [0]*products.count(0) + [product for product in products if product['stock'] == 0 ]
         return list_product(products)
     except Exception as e:
         print(f"An error occurred: {e}")
