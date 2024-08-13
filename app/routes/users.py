@@ -226,7 +226,7 @@ def order_confirmed(request: Request):
         return RedirectResponse(url="/404")
     res = checkout_cart(user_data['id'])
     if res['message'] == 'False':
-        return RedirectResponse(url='/404')
+        return RedirectResponse(url='/404',status_code=404)
     elif res['message'] == 'Error':
         message = res['response']
         product_id = res.get('product_id',None)
