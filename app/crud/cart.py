@@ -106,8 +106,6 @@ def checkout_cart(user_id):
             return {'message':'Error', 'response':response['message']}
         product = get_product(product_id)
         update_product_stock(product_id, product['stock'] - qty)
-        print("you are fucked")
-        return None
     ack = order_db.insert_one(order)
     if ack.acknowledged:
         cart_db.delete_one({'user_id':user_id})

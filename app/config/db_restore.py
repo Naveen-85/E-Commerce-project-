@@ -43,7 +43,6 @@ def new_product():
         products = json.load(file)
         for product in products:
             product['images'] = image_to_base64(product['images'])
-            print(product['images'])
             product['seller_id'] = seller_data.get(product['seller_id'])
             product['cat_id'] = category_data.get(product['cat_id'])
             product['last_change'] = datetime.now()
