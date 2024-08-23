@@ -26,5 +26,12 @@
         "password":"test1234",
         "phone":"1234567890",
         "status":"active"
+    },
+    {
+        "name":"test seller",
+        "email":"testseller1@gmail.com",
+        "password":"test1234",
+        "phone":"1234567890",
+        "status":"active"
     }
 ]
