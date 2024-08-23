@@ -1,6 +1,6 @@
 from app.model.models import Product
 from app.config.database import product_db, category_db,order_db,cart_db
-from app.schemas.schemas import list_product, product_serial
+from app.schemas.schemas import list_product, product_serial, category_serial
 from bson import ObjectId
 
 def get_product(product_id):
@@ -124,6 +124,10 @@ def search_product_by_name_seller_id(seller_id,name):
 def get_recommended_products(category_id: str, current_product_id: str):
     all_products = get_product_cat(category_id)
     recommended_products = [prod for prod in all_products if prod['id'] != current_product_id]
+    if recommended_products == []:
+        default_category = category_serial(category_db.find_one({'name': 'Laptop'}))
+        all_products = get_product_cat(default_category['id'])
+        recommended_products = all_products
     return recommended_products[:4] 
 
 

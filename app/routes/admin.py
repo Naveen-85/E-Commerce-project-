@@ -112,7 +112,7 @@ def delete_order_data(request:Request,order_id:str):
 @router.get('/manage_category',response_class=HTMLResponse)
 def manage_category(request: Request):
     admin = get_current_admin(request)
-    categories = get_all_category()
+    categories = get_all_category(flag=True)
     return templates.TemplateResponse('manage_category.html',{'request':request,"admin":admin,"categories":categories})
 
 @router.get('/manage_category_del/{item_id}',response_class=HTMLResponse)
@@ -158,7 +158,7 @@ def manage_seller(request: Request):
 def del_product_item(request:Request,item_id:str):
     admin=get_current_admin(request)
     del_product(item_id)
-    return RedirectResponse(url="/manage_product" )
+    return RedirectResponse(url="/manage_product",status_code=302)
 
 @router.get('/add_seller',response_class=HTMLResponse)
 def seller_register(request: Request):
@@ -186,7 +186,7 @@ def seller_register(request: Request, name:str = Form(...), email: str=Form(...)
 def delete_seller(request:Request,seller_id:str):
     admin=get_current_admin(request)
     del_seller(seller_id)
-    return RedirectResponse(url="/manage_seller" )
+    return RedirectResponse(url="/manage_seller",status_code=302)
 
 
 @router.get('/search_user',response_class=HTMLResponse)

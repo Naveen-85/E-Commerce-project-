@@ -50,7 +50,7 @@ def landing_page(request: Request):
 def addproductinfo(request: Request):
     try:
         seller = get_current_seller(request)
-        categories = get_all_category()
+        categories = get_all_category(flag=True)
         return templates.TemplateResponse("seller_product.html",{'request':request,"seller":seller,"categories":categories})
     except:
         return RedirectResponse(url='/seller_login')
