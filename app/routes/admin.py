@@ -51,10 +51,10 @@ def category_page(request:Request):
 @router.post('/add_category',response_class=HTMLResponse)
 def add_category_new(request: Request, name:str = Form(...), description:str = Form(...), image:str = Form(...)):
     admin=get_current_admin(request)
-    exist_cat = get_category_name(name)
+    exist_cat = get_category_name(name.lower())
     if exist_cat != None:
         return templates.TemplateResponse("add_category.html", {"request": request,"admin":admin,"message":"Category Already exist"})
-    category = Category(name=name,description=description,image=image,last_change=str(datetime.datetime.now()))
+    category = Category(name=name.lower(),description=description,image=image,last_change=str(datetime.datetime.now()))
     ack = add_new_category(category)
     if ack:
         return RedirectResponse(url='/manage_category',status_code=302)
@@ -170,12 +170,12 @@ def seller_register(request: Request, name:str = Form(...), email: str=Form(...)
     admin = get_current_admin(request)
     if len(str(number)) != 10:
         return templates.TemplateResponse("add_seller.html", {"request": request,"admin":admin,"message":"Invalid phone number"})
-    item = get_seller_mail(email)
+    item = get_seller_mail(email.lower())
     if item != None:
         return templates.TemplateResponse("add_seller.html", {"request": request,"admin":admin,"message":"Seller Already exist"})
     else:
         password = hash_password(password)
-        seller = Seller(name=name,email=email,password=password,phone=number,status='active')
+        seller = Seller(name=name,email=email.lower(),password=password,phone=number,status='active')
         ack = add_seller(seller)
         if ack:
           return templates.TemplateResponse("add_seller.html", {"request": request,"admin":admin,"success":"Seller registered successfully"})

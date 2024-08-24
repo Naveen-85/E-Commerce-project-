@@ -27,7 +27,7 @@ def login_page(request: Request, response: Response):
 
 @router.post('/user_login',response_class=RedirectResponse)
 def login(request: Request, email:str = Form(...), password:str = Form(...)):
-    user = get_user_mail(email)
+    user = get_user_mail(email.lower())
     if user != None and  verify_password(user['password'],password):
         login_user(request,str(user['email']),'auth')
         update_last_login(user['id'])
@@ -49,6 +49,7 @@ def user_register(request: Request, name:str = Form(...), email: str=Form(...), 
         return templates.TemplateResponse("user_register.html", {"request": request,"message":"User Already exist"})
     else:
         password = hash_password(password)
+        email = email.lower()
         user = User(name=name,password=password,email=email,address=address)
         ack = add_user(user)
         if ack:

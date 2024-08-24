@@ -74,7 +74,9 @@
             margin-top: 50px;
         }
    
- 
+        .captilize{
+            text-transform: capitalize;
+        }
     </style>
 </head>
 <body>
@@ -125,10 +127,10 @@
                 <tbody>
                     {% for order in orders %}
                     <tr>
-                        <td>{{order.user}}</td>
-                        <td>{{order.product}}</td>
-                        <td>{{order.category}}</td>
-                        <td>{{order.seller}}</td>
+                        <td class="captilize">{{order.user}}</td>
+                        <td class="captilize">{{order.product}}</td>
+                        <td class="captilize">{{order.category}}</td>
+                        <td class="captilize">{{order.seller}}</td>
                         <td>{{order.quantity}}</td>
                         <td>{{order.price}}</td>
                         <td>

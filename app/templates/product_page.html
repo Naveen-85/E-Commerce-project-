@@ -230,6 +230,9 @@
 .recommended-product-card .text-danger {
     color: red;
 }
+.capitalize{
+    text-transform: capitalize;
+}
     </style>
 </head>
 
@@ -293,7 +296,7 @@
             <!-- Column 2, Row 1: Product Name, Price, Description with Label -->
             <div class="col-md-6">
                 <div class="product-details">
-                    <h1 class="product-title">{{ product.name }}</h1>
+                    <h1 class="product-title capitalize">{{ product.name }}</h1>
                     <div class="product-info">
                         <h3><p><strong>Price: </strong><span>$ {{ product.price }}</span></p></h3>
                         <h3>Description:</h3>

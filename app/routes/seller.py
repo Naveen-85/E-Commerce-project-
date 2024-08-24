@@ -21,7 +21,7 @@ def login_page(request: Request):
 
 @router.post('/seller_login',response_class=HTMLResponse)
 def login(request: Request, email:str = Form(...), password:str = Form(...)):
-    seller = get_seller_mail(email)
+    seller = get_seller_mail(email.lower())
     if seller != None and verify_password(seller['password'],password):
         login_seller(request,str(seller['email']),'auth')
         return RedirectResponse(url='/seller_dashboard',status_code=302)
@@ -79,11 +79,11 @@ async def addproductinfpr(
     if seller_info == None:
         logout_seller(request)
         return RedirectResponse(url='/seller_login')
-    existing_products = get_product_name(name)
+    existing_products = get_product_name(name.lower())
     if existing_products != None and existing_products['seller_id'] == seller_info['id']:
         return templates.TemplateResponse("seller_product.html",{'request':request,"seller":seller,"categories":get_all_category(),'message':'exist'})
     product = Product(
-        name=name,
+        name=name.lower(),
         images=encoded_images[::-1],
         price=price,
         base_feature=base_feature,

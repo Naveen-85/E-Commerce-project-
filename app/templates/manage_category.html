@@ -81,6 +81,9 @@
         .back-button {
             margin: 20px auto;
         }
+        .captilize{
+            text-transform: capitalize;
+        }
     </style>
 </head>
 <body>
@@ -132,7 +135,7 @@
                 <tbody>
                     {% for category in categories %}
                     <tr>
-                        <td>{{ category.name }}</td>
+                        <td class="captilize">{{ category.name }}</td>
                         <td>{{ category.description }}</td>
                         <td>{{ category.last_change }}</td>
                         <td>

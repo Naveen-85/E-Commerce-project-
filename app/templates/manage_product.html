@@ -74,6 +74,9 @@
         .back-button {
             margin: 20px auto;
         }
+        .capitalize {
+            text-transform: capitalize;
+        }
     </style>
 </head>
 <body>
@@ -130,9 +133,9 @@
                 <tbody>
                     {% for item in data %}
                     <tr>
-                        <td>{{ item.product }}</td>
-                        <td>{{ item.category }}</td>
-                        <td>{{ item.seller }}</td>
+                        <td class="capitalize">{{ item.product }}</td>
+                        <td class="capitalize">{{ item.category }}</td>
+                        <td class="capitalize">{{ item.seller }}</td>
                         <td>{{ item.quantity }}</td>
                         <td>{{ item.price }}</td>
                         <td>

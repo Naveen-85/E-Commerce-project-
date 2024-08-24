@@ -79,7 +79,7 @@
                 </tr>
                 {% for product in order_data.product_data %}
                 <tr>
-                    <td>{{ product.name }}</td>
+                    <td class='capitalize'>{{ product.name }}</td>
                     <td>{{ product.stock }}</td>
                     <td>€{{ product.price }}</td>
                     <td>€{{ product.total_price }}</td>
@@ -149,7 +149,9 @@
             text-decoration: none;
             border-radius: 10px;
         }
-        
+        .capitalize{
+            text-transform: capitalize;
+        }
     </style>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

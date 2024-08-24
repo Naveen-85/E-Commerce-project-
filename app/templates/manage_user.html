@@ -81,6 +81,9 @@
         .back-button {
             margin: 20px auto;
         }
+        .capitalize{
+            text-transform: capitalize;
+        }
     </style>
 </head>
 <body>
@@ -132,7 +135,7 @@
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td>{{ user.name }}</td>
+                        <td class="capitalize">{{ user.name }}</td>
                         <td>{{ user.last_login }}</td>
                         <td>{{ user.address }}</td>
                         <td>

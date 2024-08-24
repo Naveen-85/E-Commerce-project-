@@ -74,7 +74,7 @@
                 <h3 id="seller_name" >Profile </h3>
             </div>
             <div class="card-body">
-                <h3 class="card-text">Name: {{ user_data['name'] }}</h3>
+                <h3 class="card-text capitalize">Name: {{ user_data['name'] }}</h3>
                 <h3 class="card-text">Email: {{ user_data['email'] }}</h3>
                 <h3 class="card-text">Address: {{ user_data['address'] }}</h3>
                 <form action="/user_edit_profile" method="get">                
@@ -126,7 +126,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5>
+                        <h5 class="card-title capitalize">{{ product.name }}</h5>
                         <p class="card-text">{{ product.base_feature }}</p>
                         <p class="card-text">€ {{ product.price }}</p>
                     </div>
@@ -166,6 +166,9 @@
     {% endif %}
     
     <style>
+        .capitalize {
+            text-transform: capitalize;
+        }
         .card-header {
             display: flex;
             justify-content: space-between;

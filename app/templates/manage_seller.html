@@ -80,6 +80,9 @@
         .back-button {
             margin: 20px auto;
         }
+        .capitalize{
+            text-transform: capitalize;
+        }
     </style>
 </head>
 <body>
@@ -142,7 +145,7 @@
                     {% for seller in sellers %}
                     <tr>
                         <td>{{ seller.id }}</td>
-                        <td>{{ seller.name }}</td>
+                        <td class="capitalize">{{ seller.name }}</td>
                         <td>{{ seller.email }}</td>
                         <td>
                             <form action="/delete_seller/{{seller.id}}" method="get">

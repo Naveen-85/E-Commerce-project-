@@ -31,6 +31,7 @@ def new_category():
     with open("app/data/category.json", "r") as file:
         categories = json.load(file)
         for category in categories:
+            category['name'] = category['name'].lower()
             category['last_change'] = datetime.now()
             category_db.insert_one(category)
             
@@ -38,10 +39,11 @@ def new_product():
     seller_data = seller_db.find()
     seller_data = {seller['name']:str(seller['_id']) for seller in seller_data}
     category_data = category_db.find()
-    category_data = {category['name']:str(category['_id']) for category in category_data}
+    category_data = {category['name'].capitalize() :str(category['_id']) for category in category_data}
     with open("app/data/product.json", "r") as file:
         products = json.load(file)
         for product in products:
+            product['name'] = product['name'].lower()
             product['images'] = image_to_base64(product['images'])
             product['seller_id'] = seller_data.get(product['seller_id'])
             product['cat_id'] = category_data.get(product['cat_id'])
@@ -52,6 +54,7 @@ def new_seller():
     with open("app/data/sellers.json", "r") as file:
         sellers = json.load(file)
         for seller in sellers:
+            seller['email'] = seller['email'].lower()
             seller['password'] = hash_password(seller['password'])
             seller['last_login'] = None
             seller_db.insert_one(seller)
@@ -60,6 +63,7 @@ def new_user():
     with open("app/data/users.json", "r") as file:
         users = json.load(file)
         for user in users:
+            user['email'] = user['email'].lower()
             user['password'] = hash_password(user['password'])
             user['last_login'] = None
             user_db.insert_one(user)

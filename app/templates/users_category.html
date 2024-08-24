@@ -18,7 +18,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         {% for category in categories %}
-                        <li><a class="dropdown-item" href="/user_category/{{category.id}}">{{ category.name }}</a></li>
+                        <li><a class="dropdown-item capitalize" href="/user_category/{{category.id}}">{{ category.name }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
@@ -54,7 +54,7 @@
         </div>
     </nav>
     <div class="container">
-        <h1>{{category.name}}</h1>
+        <h1 class="capitalize">{{category.name}}</h1>
         <h2>{{category.description}}</h2>
         <div class="sort_dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -74,7 +74,7 @@
                 <a href='/user_product/{{product.id}}' class="card shadow-sm p-3 mb-5 ">    
                     <div class="card-body">
                         <img src= "data:image/png;base64,{{ product.images[0] }} " class="card-img-top" alt="...">
-                        <h5 id = "product_title" class="card-title text-left ">{{ product.name }}</h5>
+                        <h5 id = "product_title" class="card-title text-left capitalize">{{ product.name }}</h5>
                         <div class="product_data"> 
                             <p class="card-text"> {{ product.base_feature }}</p>
                             <p class="card-text"> €{{ product.price }}</p>
@@ -92,6 +92,9 @@
     </div>
     
     <style>
+        .capitalize{
+            text-transform: capitalize;
+        }
         .dropdown{
             margin-left: 50px;
             display: flex;

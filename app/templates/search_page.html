@@ -57,7 +57,7 @@
     </nav>
     
     <div class="container mt-5">
-        <h3 class="text-left">Search Results for {{query}}</h3>
+        <h3 class="text-left capitalize">Search Results for {{query}}</h3>
         <div class="row row-cols-1 row-cols-md-4 g-4">
             {% if not products %}
                 <h3 class="text-center">No products found</h3>
@@ -67,7 +67,7 @@
                 <a href="/user_product/{{product.id}}" class="card shadow-sm p-3 mb-5 ">    
                     <div class="card-body">
                         <img src= "data:image/png;base64,{{ product.images[0] }} " class="card-img-top" alt="...">
-                        <h5 id = "product_title" class="card-title text-left ">{{ product.name }}</h5>
+                        <h5 id = "product_title" class="card-title text-left capitalize">{{ product.name }}</h5>
                         <div class="product_data"> 
                             <p class="card-text"> {{ product.base_feature }}</p>
                             <p class="card-text"> €{{ product.price }}</p>
@@ -85,6 +85,9 @@
     </div>
     
     <style>
+        .capitalize{
+            text-transform: capitalize;
+        }
         .dropdown{
             margin-left: 50px;
             display: flex;

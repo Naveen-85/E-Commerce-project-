@@ -65,7 +65,7 @@
                     {% if category %}
                     <div class="card-body">
                         <img src= " {{ category.image }} " class="card-img-top" alt="...">
-                            <h5 class="card-title text-center ">{{category.name}}</h5>
+                            <h5 class="card-title text-center capitalize">{{category.name}}</h5>
                     </div>
                         {% else %}
                         <img src= "default-image.jpg" class="card-img-top" alt="...">
@@ -87,7 +87,7 @@
                 <a href="/user_product/{{product.id}}" class="card shadow-sm p-3 mb-5 ">    
                     <div class="card-body">
                         <img src= "data:image/png;base64,{{ product.images[0] }} " class="card-img-top" alt="...">
-                        <h5 id = "product_title" class="card-title text-left ">{{ product.name }}</h5>
+                        <h5 id = "product_title" class="card-title text-left capitalize ">{{ product.name }}</h5>
                         <div class="product_data"> 
                             <p class="card-text"> {{ product.base_feature }}</p>
                             <p class="card-text"> €{{ product.price }}</p>
@@ -105,6 +105,9 @@
     </div>
     
     <style>
+        .capitalize{
+            text-transform: capitalize;
+        }
         .dropdown{
             margin-left: 50px;
             display: flex;
