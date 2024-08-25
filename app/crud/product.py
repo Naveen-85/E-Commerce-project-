@@ -125,7 +125,7 @@ def get_recommended_products(category_id: str, current_product_id: str):
     all_products = get_product_cat(category_id)
     recommended_products = [prod for prod in all_products if prod['id'] != current_product_id]
     if recommended_products == []:
-        default_category = category_serial(category_db.find_one({'name': 'Laptop'}))
+        default_category = category_serial(category_db.find_one({'name': 'laptop'}))
         all_products = get_product_cat(default_category['id'])
         recommended_products = all_products
     return recommended_products[:4] 
